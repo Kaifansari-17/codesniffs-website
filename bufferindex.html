@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sniff | Full-Stack Engineering Agency</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg-dark: #0a0a0c;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-main: #e0e0e0;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- LOADER OVERLAY --- */
+        #journey-loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s;
+        }
+
+        .viewport {
+            perspective: 1000px;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .laptop {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(-25deg);
+            transition: transform 1.5s ease;
+        }
+
+        .lid {
+            width: 200px;
+            height: 130px;
+            background: #2d2d32;
+            border: 3px solid #3d3d42;
+            border-radius: 8px 8px 0 0;
+            transform-origin: bottom;
+            transform: rotateX(-95deg);
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screen {
+            width: 184px;
+            height: 114px;
+            background: #000;
+            border-radius: 2px;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: var(--font-mono);
+            font-size: 8px;
+            color: #00ff00;
+            opacity: 0;
+            transition: opacity 0.5s 1s;
+        }
+
+        .base {
+            width: 220px;
+            height: 10px;
+            background: #1a1a1c;
+            margin-left: -10px;
+            border-radius: 2px 2px 8px 8px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .terminal-text {
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 5px;
+            height: 10px;
+            background: #00ff00;
+            animation: blink 0.8s infinite;
+        }
+
+        .journey-status {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .status-msg {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 15px;
+            height: 20px;
+        }
+
+        .laptop.open .lid { transform: rotateX(0deg); }
+        .laptop.open .screen { opacity: 1; }
+        .zoom-out { transform: scale(5) translateZ(500px); opacity: 0; pointer-events: none; }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease 0.5s;
+        }
+
+        .main-content.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(112, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            padding: 2rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, var(--bg-dark), transparent);
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            position: relative;
+            font-family: 'Fira Code', monospace;
+            font-size: 28px;
+            font-weight: bold;
+            color: #00f2ff;
+            display: flex;
+            align-items: center;
+        }
+
+        .scanner-line {
+            width: 2px;
+            height: 30px;
+            background: white;
+            box-shadow: 0 0 10px #00f2ff;
+            margin: 0 5px;
+            animation: sniff-move 1.5s infinite ease-in-out;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #00f2ff;
+            font-weight: 300;
+            margin-left: 2px;
+        }
+
+        @keyframes sniff-move {
+            0%, 100% { transform: scaleY(0.5); opacity: 0.2; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .logo-wrapper:hover .scanner-line {
+            animation: sniff-rapid 0.3s infinite;
+        }
+
+        @keyframes sniff-rapid {
+            0% { transform: translateX(-2px); }
+            100% { transform: translateX(2px); }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+        }
+
+        .badge {
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.hero-sub {
+            max-width: 600px;
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* --- CTA BUTTONS --- */
+        .btn {
+            padding: 15px 35px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: black;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 242, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+        }
+
+        /* --- TECH STACK MARQUEE --- */
+        .tech-stack {
+            padding: 50px 0;
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+
+        .marquee {
+            display: flex;
+            width: 200%;
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee span {
+            width: 20%;
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            color: #444;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- SERVICES GRID --- */
+        .services {
+            padding: 100px 10%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 15px;
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .service-card:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--primary);
+            transform: translateY(-10px);
+        }
+
+        .service-card i {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        /* --- PRICING SECTION --- */
+        .pricing {
+            padding: 100px 10%;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 40px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.featured {
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary);
+            color: black;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .price-badge {
+            background: rgba(112, 0, 255, 0.1);
+            color: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        .price-period {
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .features-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* --- CONTACT SECTION --- */
+        .contact {
+            padding: 100px 10%;
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 40px auto 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transition: 0.3s;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .contact-form textarea {
+            grid-column: 1 / -1;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 50px 10%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #555;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: var(--text-main);
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .hero {
+                height: auto;
+                padding: 100px 5% 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADER -->
+    <div id="journey-loader">
+        <div class="viewport">
+            <div class="laptop" id="laptop">
+                <div class="lid">
+                    <div class="screen">
+                        <div class="terminal-text" id="terminal"></div>
+                        <span class="cursor"></span>
+                    </div>
+                </div>
+                <div class="base"></div>
+            </div>
+        </div>
+
+        <div class="journey-status">
+            <div class="status-msg" id="status-msg">Connecting...</div>
+            <div style="width: 150px; height: 2px; background: #222; margin: 0 auto; position: relative; overflow: hidden;">
+                <div id="progress" style="position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--primary); transition: width 0.3s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="main-content">
+        <div class="grid-bg"></div>
+
+        <nav>
+            <div class="logo-wrapper">
+                <div class="logo-icon">
+                    <div class="bracket-left">{</div>
+                    <div class="scanner-line"></div>
+                    <div class="bracket-right">}</div>
+                </div>
+                <div class="logo-text">
+                    CODE<span>SNIFF</span>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="badge">Full Stack Agency</div>
+            <h1>We Build <span class="gradient-text">Scalable</span> Digital Architectures.</h1>
+            <p class="hero-sub">Specializing in Java, ASP.NET, and PHP environments. From complex web forms to enterprise MVC applications.</p>
+            <div class="cta-group">
+                <a href="#services" class="btn btn-primary">Our Solutions</a>
+                <a href="#pricing" class="btn btn-outline">View Pricing</a>
+            </div>
+        </section>
+
+        <div class="tech-stack">
+            <div class="marquee">
+                <span>JAVA</span>
+                <span>ASP.NET</span>
+                <span>PHP</span>
+                <span>MVC</span>
+                <span>SQL SERVER</span>
+                <span>REACT</span>
+                <span>VUE.JS</span>
+                <span>DOCKER</span>
+                <span>AWS</span>
+                <span>AZURE</span>
+                <span>JAVA</span>
+                <span>ASP.NET</span>
+                <span>PHP</span>
+                <span>MVC</span>
+                <span>SQL SERVER</span>
+            </div>
+        </div>
+
+        <section class="services" id="services">
+            <h2 class="section-title gradient-text">Our Services</h2>
+            <div class="service-card">
+                <i class="fas fa-code"></i>
+                <h3>Custom Development</h3>
+                <p>High-performance backend systems using Java and ASP.NET Core with microservices architecture.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-laptop-code"></i>
+                <h3>Web Applications</h3>
+                <p>Robust PHP & MVC architectures tailored for complex business logic and enterprise solutions.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>App Ecosystems</h3>
+                <p>Cross-platform solutions that integrate seamlessly with your web forms and legacy systems.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-database"></i>
+                <h3>Full Stack</h3>
+                <p>End-to-end delivery from database schema design to frontend UI with CI/CD pipelines.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-cloud"></i>
+                <h3>Cloud Migration</h3>
+                <p>Seamless migration to AWS, Azure, or Google Cloud with optimization and security.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>DevOps & Security</h3>
+                <p>Infrastructure as code, containerization, and enterprise-grade security implementations.</p>
+            </div>
+        </section>
+
+        <section class="pricing" id="pricing">
+            <h2 class="section-title gradient-text">Transparent Pricing</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 40px; color: #888;">Choose the plan that fits your development needs. All plans include expert consultation.</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="price-badge">Starter</div>
+                    <h3>Basic Development</h3>
+                    <div class="price-amount">$4,999</div>
+                    <div class="price-period">One-time project fee</div>
+                    <ul class="features-list">
+                        <li>Up to 50 hours development</li>
+                        <li>Single technology stack</li>
+                        <li>Basic responsive design</li>
+                        <li>Standard testing</li>
+                        <li>1 month support</li>
+                        <li>Basic documentation</li>
+                    </ul>
+                    <button class="btn btn-outline full-width">Get Started</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="price-badge">Professional</div>
+                    <h3>Full Stack Package</h3>
+                    <div class="price-amount">$12,999</div>
+                    <div class="price-period">Complete solution</div>
+                    <ul class="features-list">
+                        <li>Up to 200 hours development</li>
+                        <li>Full stack (frontend + backend)</li>
+                        <li>Database design & implementation</li>
+                        <li>API development</li>
+                        <li>6 months support</li>
+                        <li>Comprehensive documentation</li>
+                        <li>Basic cloud deployment</li>
+                        <li>Performance optimization</li>
+                    </ul>
+                    <button class="btn btn-primary full-width">Most Popular</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="price-badge">Enterprise</div>
+                    <h3>Custom Solution</h3>
+                    <div class="price-amount">$29,999+</div>
+                    <div class="price-period">Tailored to your needs</div>
+                    <ul class="features-list">
+                        <li>Unlimited development scope</li>
+                        <li>Multiple technology integration</li>
+                        <li>Custom architecture design</li>
+                        <li>Advanced security features</li>
+                        <li>12 months premium support</li>
+                        <li>Full CI/CD pipeline</li>
+                        <li>Cloud infrastructure setup</li>
+                        <li>Team training sessions</li>
+                        <li>Scalability planning</li>
+                    </ul>
+                    <button class="btn btn-outline full-width">Contact for Quote</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact" id="contact">
+            <h2 class="section-title gradient-text">Start Your Project</h2>
+            <p style="max-width: 600px; margin: 0 auto 40px; color: #888;">Tell us about your project and we'll get back to you within 24 hours with a detailed plan.</p>
+            
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <select required>
+                    <option value="" disabled selected>Select Technology Stack</option>
+                    <option value="java">Java + Spring Boot</option>
+                    <option value="aspnet">ASP.NET + C#</option>
+                    <option value="php">PHP + Laravel/Symfony</option>
+                    <option value="fullstack">Full Stack (Multiple)</option>
+                </select>
+                <select required>
+                    <option value="" disabled selected>Project Timeline</option>
+                    <option value="urgent">Urgent (1-2 months)</option>
+                    <option value="standard">Standard (3-6 months)</option>
+                    <option value="flexible">Flexible (6+ months)</option>
+                </select>
+                <textarea placeholder="Project Details & Requirements" required></textarea>
+                <button type="submit" class="btn btn-primary full-width">Send Request</button>
+            </form>
+        </section>
+
+        <footer>
+            <div class="footer-section">
+                <h3>Code Sniff</h3>
+                <p>Enterprise-grade full stack development with cutting-edge technologies and proven methodologies.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-dribbble"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Technologies</h3>
+                <p>Java • Spring Boot • ASP.NET • C# • PHP • Laravel • Symfony • React • Vue.js • SQL Server • MySQL • Docker • AWS • Azure</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>hello@codesniff.dev</p>
+                <p>+1 (555) 123-4567</p>
+                <p>San Francisco • New York • London</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        // Loader functionality
+        const terminal = document.getElementById('terminal');
+        const statusMsg = document.getElementById('status-msg');
+        const progress = document.getElementById('progress');
+        const laptop = document.getElementById('laptop');
+        const loader = document.getElementById('journey-loader');
+        const mainContent = document.getElementById('main-content');
+
+        const logs = [
+            "> git clone https://github.com/codesniff/init\n",
+            "> npm install --production\n",
+            "> compiling TypeScript...\n",
+            "> bundling assets...\n",
+            "> optimizing for production...\n",
+            "> running security scan...\n",
+            "> deploying to edge network...\n",
+            "> application ready.\n",
+            "> Welcome to Code Sniff.\n"
+        ];
+
+        const steps = [
+            { msg: "Initializing Systems...", p: 10 },
+            { msg: "Loading Workspace...", p: 30 },
+            { msg: "Compiling Assets...", p: 55 },
+            { msg: "Optimizing Performance...", p: 75 },
+            { msg: "Finalizing Setup...", p: 95 }
+        ];
+
+        async function startJourney() {
+            // Step 1: Open Laptop
+            await wait(800);
+            laptop.classList.add('open');
+            updateStatus(0);
+
+            // Step 2: Start Terminal Typing
+            await wait(1200);
+            updateStatus(1);
+            
+            for (let i = 0; i < logs.length; i++) {
+                await typeText(logs[i]);
+                progress.style.width = `${15 + (i * 10)}%`;
+                if(i === 2) updateStatus(2);
+                if(i === 5) updateStatus(3);
+                if(i === 7) updateStatus(4);
+                await wait(300);
+            }
+
+            // Step 3: Finalize
+            progress.style.width = "100%";
+            await wait(1000);
+            
+            // Step 4: Zoom into screen and hide loader
+            loader.classList.add('zoom-out');
+            mainContent.classList.add('loaded');
+            
+            // Initialize GSAP animations for main content
+            gsap.from(".hero h1", { opacity: 0, y: 50, duration: 1, delay: 0.5 });
+            gsap.from(".hero p", { opacity: 0, y: 30, duration: 1, delay: 0.8 });
+            gsap.from(".service-card", { 
+                opacity: 0, 
+                y: 50, 
+                stagger: 0.2, 
+                duration: 1,
+                scrollTrigger: {
+                    trigger: ".services",
+                    start: "top 80%"
+                }
+            });
+            gsap.from(".pricing-card", { 
+                opacity: 0, 
+                y: 50, 
+                stagger: 0.3, 
+                duration: 1,
+                scrollTrigger: {
+                    trigger: ".pricing",
+                    start: "top 80%"
+                }
+            });
+        }
+
+        function updateStatus(index) {
+            statusMsg.innerText = steps[index].msg;
+            progress.style.width = `${steps[index].p}%`;
+        }
+
+        function typeText(text) {
+            return new Promise(resolve => {
+                let i = 0;
+                const interval = setInterval(() => {
+                    terminal.innerText += text[i];
+                    i++;
+                    if (i === text.length) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 40);
+            });
+        }
+
+        function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+        // Trigger on load
+        window.addEventListener('load', startJourney);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Form submission
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you! Your project request has been submitted. We\'ll contact you within 24 hours.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

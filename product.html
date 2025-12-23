@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Products Store | Code Sniff</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --primary-glow: rgba(0, 242, 255, 0.3);
+            --secondary: #7000ff;
+            --secondary-glow: rgba(112, 0, 255, 0.3);
+            --bg-dark: #0a0a0c;
+            --bg-darker: #050507;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-green: #00ff88;
+            --accent-red: #ff2a6d;
+            --accent-yellow: #ffd166;
+            --accent-orange: #ff7b00;
+            --success: #00ff88;
+            --warning: #ffd166;
+            --error: #ff2a6d;
+            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'Inter', sans-serif;
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-glow: 0 0 20px rgba(0, 242, 255, 0.2);
+            --section-spacing: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 20px 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text {
+            font-family: var(--font-sans);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+            font-weight: 300;
+        }
+
+        /* --- CART ICON --- */
+        .cart-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent-red);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- MOBILE NAVIGATION --- */
+        .mobile-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 20px;
+            flex: 1;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-item.active,
+        .mobile-nav-item:hover {
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+        }
+
+        /* --- PAGE HERO --- */
+        .page-hero {
+            padding: 180px 5% 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(10, 10, 12, 0.9), transparent);
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* --- PRODUCTS CONTAINER --- */
+        .products-container {
+            padding: 0 5% var(--section-spacing);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- PRODUCTS FILTER --- */
+        .products-filter {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .filter-title {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .filter-reset {
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .filter-reset:hover {
+            background: rgba(255, 42, 109, 0.1);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-option.active,
+        .filter-option:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .price-range {
+            margin-top: 10px;
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: var(--font-sans);
+        }
+
+        /* --- PRODUCTS GRID --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .product-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 2;
+        }
+
+        .product-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-new {
+            background: var(--accent-green);
+            color: black;
+        }
+
+        .badge-hot {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .badge-sale {
+            background: var(--accent-orange);
+            color: white;
+        }
+
+        .badge-premium {
+            background: var(--primary);
+            color: black;
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image i {
+            font-size: 4rem;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .product-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-actions {
+            opacity: 1;
+        }
+
+        .product-action {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .product-action:hover {
+            background: var(--primary);
+            color: black;
+            transform: scale(1.1);
+        }
+
+        .product-content {
+            padding: 25px;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+            line-height: 1.3;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            color: var(--accent-yellow);
+        }
+
+        .rating-count {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .product-specs {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .product-specs li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .product-specs li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .current-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .original-price {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            margin-top: 5px;
+        }
+
+        .product-cta {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(112, 0, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(112, 0, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 242, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* --- PAGINATION --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 50px;
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn.active,
+        .page-btn:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            border-color: transparent;
+        }
+
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* --- PRODUCT DETAILS MODAL --- */
+        .product-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .product-modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent-red);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .modal-images {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-image {
+            height: 300px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-image i {
+            font-size: 6rem;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            gap: 10px;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .thumbnail.active,
+        .thumbnail:hover {
+            border-color: var(--primary);
+        }
+
+        .modal-details {
+            padding: 20px 0;
+        }
+
+        .modal-header {
+            margin-bottom: 25px;
+        }
+
+        .modal-category {
+            display: inline-block;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .modal-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-stars {
+            color: var(--accent-yellow);
+            font-size: 1.2rem;
+        }
+
+        .review-count {
+            color: var(--text-secondary);
+        }
+
+        .modal-price {
+            margin-bottom: 30px;
+        }
+
+        .modal-current-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-right: 15px;
+        }
+
+        .modal-original-price {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .modal-savings {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-features {
+            margin-bottom: 30px;
+        }
+
+        .features-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .purchase-options {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .options-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .license-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .license-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .license-option.active,
+        .license-option:hover {
+            border-color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+        }
+
+        .license-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .license-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .license-features {
+            list-style: none;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .quantity {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1rem;
+            flex: 1;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-section {
+            padding: var(--section-spacing) 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.1), rgba(0, 242, 255, 0.1));
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 5% 30px;
+            background: var(--bg-darker);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-col p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .license-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .btn-large {
+                width: 100%;
+            }
+            
+            .page-hero {
+                padding: 150px 5% 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-cta {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.5s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">{}</div>
+            <div class="logo-text">CODE<span>SNIFF</span></div>
+        </a>
+        
+        <div class="cart-icon-container" onclick="window.location.href='cart.html'">
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAVIGATION -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="services.html" class="mobile-nav-item">
+            <i class="fas fa-code"></i>
+            <span>Services</span>
+        </a>
+        <a href="products.html" class="mobile-nav-item active">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Products</span>
+        </a>
+        <a href="contact.html" class="mobile-nav-item">
+            <i class="fas fa-envelope"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <h1 class="page-title fade-in">Product Store</h1>
+        <p class="page-subtitle fade-in">Ready-to-use software solutions and templates for businesses. Buy now and deploy instantly.</p>
+    </section>
+
+    <!-- PRODUCTS CONTAINER -->
+    <div class="products-container">
+        <!-- PRODUCTS FILTER -->
+        <div class="products-filter fade-in">
+            <div class="filter-header">
+                <h2 class="filter-title">Filter Products</h2>
+                <button class="filter-reset" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> Reset Filters
+                </button>
+            </div>
+            
+            <div class="filter-grid">
+                <!-- Category Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <div class="filter-options">
+                        <div class="filter-option active" onclick="filterByCategory('all')">All</div>
+                        <div class="filter-option" onclick="filterByCategory('website')">Website Templates</div>
+                        <div class="filter-option" onclick="filterByCategory('ecommerce')">E-commerce</div>
+                        <div class="filter-option" onclick="filterByCategory('crm')">CRM Systems</div>
+                        <div class="filter-option" onclick="filterByCategory('restaurant')">Restaurant</div>
+                        <div class="filter-option" onclick="filterByCategory('gym')">Gym/Fitness</div>
+                    </div>
+                </div>
+                
+                <!-- Price Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">Price Range (₹)</label>
+                    <div class="price-range">
+                        <input type="range" min="0" max="200000" value="200000" class="price-slider" id="priceSlider" oninput="updatePriceRange()">
+                    </div>
+                    <div class="price-inputs">
+                        <input type="number" class="price-input" id="minPrice" placeholder="Min" value="0" min="0" max="200000" onchange="filterByPrice()">
+                        <input type="number" class="price-input" id="maxPrice" placeholder="Max" value="200000" min="0" max="200000" onchange="filterByPrice()">
+                    </div>
+                </div>
+                
+                <!-- License Type -->
+                <div class="filter-group">
+                    <label class="filter-label">License Type</label>
+                    <div class="filter-options">
+                        <div class="filter-option active" onclick="filterByLicense('all')">All</div>
+                        <div class="filter-option" onclick="filterByLicense('single')">Single Site</div>
+                        <div class="filter-option" onclick="filterByLicense('multiple')">Multiple Sites</div>
+                        <div class="filter-option" onclick="filterByLicense('extended')">Extended</div>
+                    </div>
+                </div>
+                
+                <!-- Sort By -->
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select class="filter-select" id="sortSelect" onchange="sortProducts()">
+                        <option value="popularity">Popularity</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                        <option value="rating">Customer Rating</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination">
+            <button class="page-btn disabled" id="prevPage">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span style="color: var(--text-secondary); padding: 0 10px;">...</span>
+            <button class="page-btn">8</button>
+            <button class="page-btn" id="nextPage">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAILS MODAL -->
+    <div class="product-modal" id="productModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeProductModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-body">
+                <!-- Product Images -->
+                <div class="modal-images">
+                    <div class="main-image" id="mainImage">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="thumbnail-images">
+                        <div class="thumbnail active" onclick="changeMainImage(0)">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="thumbnail" onclick="changeMainImage(1)">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="thumbnail" onclick="changeMainImage(2)">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="thumbnail" onclick="changeMainImage(3)">
+                            <i class="fas fa-code"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Details -->
+                <div class="modal-details">
+                    <div class="modal-header">
+                        <div class="modal-category" id="modalCategory">Website Template</div>
+                        <h2 class="modal-title" id="modalTitle">Product Title</h2>
+                        
+                        <div class="modal-rating">
+                            <div class="modal-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="review-count" id="reviewCount">(128 reviews)</span>
+                        </div>
+                        
+                        <div class="modal-price">
+                            <span class="modal-current-price" id="modalCurrentPrice">₹0</span>
+                            <span class="modal-original-price" id="modalOriginalPrice">₹0</span>
+                            <span class="modal-savings" id="modalSavings">Save 0%</span>
+                        </div>
+                    </div>
+                    
+                    <p class="modal-description" id="modalDescription">
+                        Product description will appear here. This is a detailed description of the product features and benefits.
+                    </p>
+                    
+                    <div class="modal-features">
+                        <h3 class="features-title">Key Features</h3>
+                        <ul class="features-list" id="featuresList">
+                            <!-- Features will be added here -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Purchase Options -->
+                    <div class="purchase-options">
+                        <h3 class="options-title">Choose License</h3>
+                        
+                        <div class="license-options">
+                            <div class="license-option active" onclick="selectLicense('single')">
+                                <div class="license-name">Single Site License</div>
+                                <div class="license-price">₹24,999</div>
+                                <ul class="license-features">
+                                    <li>Use on 1 website</li>
+                                    <li>6 months support</li>
+                                    <li>Basic customization</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="license-option" onclick="selectLicense('multiple')">
+                                <div class="license-name">Multiple Sites License</div>
+                                <div class="license-price">₹44,999</div>
+                                <ul class="license-features">
+                                    <li>Use on up to 5 websites</li>
+                                    <li>1 year support</li>
+                                    <li>Advanced customization</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="license-option" onclick="selectLicense('extended')">
+                                <div class="license-name">Extended License</div>
+                                <div class="license-price">₹79,999</div>
+                                <ul class="license-features">
+                                    <li>Unlimited websites</li>
+                                    <li>Lifetime updates</li>
+                                    <li>Priority support</li>
+                                    <li>Source code included</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity" id="productQuantity">1</span>
+                            <button class="quantity-btn" onclick="changeQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <span style="margin-left: auto; color: var(--text-secondary);">Quantity</span>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button class="btn btn-primary btn-large" onclick="addToCartModal()">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="buyNow()">
+                                <i class="fas fa-bolt"></i> Buy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <h2 class="cta-title fade-in">Need Custom Solutions?</h2>
+        <p class="cta-description fade-in">Our team can customize any product to match your specific business requirements.</p>
+        <div>
+            <button class="btn btn-primary" onclick="window.location.href='services.html'">
+                <i class="fas fa-paint-brush"></i> Request Customization
+            </button>
+            <button class="btn btn-secondary" onclick="window.open('tel:+919876543210')">
+                <i class="fas fa-phone"></i> Call for Quote
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Code Sniff Store</h3>
+                <p>Premium software solutions and templates for businesses. Instant download and deployment.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-dribbble"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Product Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="filterByCategory('website')">Website Templates</a></li>
+                    <li><a href="#" onclick="filterByCategory('ecommerce')">E-commerce Solutions</a></li>
+                    <li><a href="#" onclick="filterByCategory('crm')">CRM Systems</a></li>
+                    <li><a href="#" onclick="filterByCategory('restaurant')">Restaurant Management</a></li>
+                    <li><a href="#" onclick="filterByCategory('gym')">Gym & Fitness</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Video Tutorials</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Community Forum</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Store Info</h3>
+                <p>📧 support@codesniff.store</p>
+                <p>📞 +91 98765 43210</p>
+                <p>🕒 Support: 10AM - 7PM IST</p>
+                <p>💳 Secure Payment Gateway</p>
+                <p>🔄 30-Day Money Back</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 Code Sniff Store. All products are digitally delivered. | <a href="#" style="color: var(--primary);">Refund Policy</a> | <a href="#" style="color: var(--primary);">License Terms</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Products Data
+        const products = [
+            {
+                id: 1,
+                title: "Restaurant Management System",
+                category: "restaurant",
+                description: "Complete restaurant management solution with table booking, online ordering, and inventory management.",
+                price: 34999,
+                originalPrice: 49999,
+                rating: 4.5,
+                reviewCount: 128,
+                badges: ["new", "hot"],
+                license: "multiple",
+                features: [
+                    "Online Table Reservation System",
+                    "Digital Menu with Images",
+                    "Order Management Dashboard",
+                    "Inventory Tracking",
+                    "Staff Management",
+                    "Customer Feedback System",
+                    "Mobile Responsive",
+                    "Multi-language Support"
+                ],
+                icon: "fas fa-utensils"
+            },
+            {
+                id: 2,
+                title: "E-commerce Store Template",
+                category: "ecommerce",
+                description: "Modern e-commerce template with shopping cart, payment gateway, and admin dashboard.",
+                price: 29999,
+                originalPrice: 39999,
+                rating: 4.8,
+                reviewCount: 245,
+                badges: ["sale", "premium"],
+                license: "single",
+                features: [
+                    "Product Catalog Management",
+                    "Shopping Cart System",
+                    "Multiple Payment Gateways",
+                    "Order Tracking",
+                    "Customer Accounts",
+                    "Wishlist Feature",
+                    "SEO Optimized",
+                    "Admin Dashboard"
+                ],
+                icon: "fas fa-shopping-cart"
+            },
+            {
+                id: 3,
+                title: "Gym Management Software",
+                category: "gym",
+                description: "Complete gym management system with member tracking, class scheduling, and billing.",
+                price: 39999,
+                originalPrice: 54999,
+                rating: 4.6,
+                reviewCount: 89,
+                badges: ["new"],
+                license: "multiple",
+                features: [
+                    "Member Management",
+                    "Class Schedule System",
+                    "Membership Billing",
+                    "Trainer Management",
+                    "Attendance Tracking",
+                    "Progress Reports",
+                    "Mobile App Integration",
+                    "Payment Processing"
+                ],
+                icon: "fas fa-dumbbell"
+            },
+            {
+                id: 4,
+                title: "Hotel Booking System",
+                category: "website",
+                description: "Hotel reservation system with room management, online booking, and payment processing.",
+                price: 44999,
+                originalPrice: 59999,
+                rating: 4.7,
+                reviewCount: 156,
+                badges: ["premium"],
+                license: "extended",
+                features: [
+                    "Room Booking System",
+                    "Check-in/Check-out Management",
+                    "Housekeeping Dashboard",
+                    "Payment Gateway Integration",
+                    "Guest Management",
+                    "Reporting & Analytics",
+                    "Multi-currency Support",
+                    "OTA Integration"
+                ],
+                icon: "fas fa-hotel"
+            },
+            {
+                id: 5,
+                title: "CRM System Pro",
+                category: "crm",
+                description: "Customer relationship management system with lead tracking, sales pipeline, and reporting.",
+                price: 49999,
+                originalPrice: 69999,
+                rating: 4.9,
+                reviewCount: 312,
+                badges: ["hot", "premium"],
+                license: "extended",
+                features: [
+                    "Lead Management",
+                    "Sales Pipeline",
+                    "Customer Database",
+                    "Email Campaigns",
+                    "Task Management",
+                    "Reporting Dashboard",
+                    "Team Collaboration",
+                    "API Integration"
+                ],
+                icon: "fas fa-users"
+            },
+            {
+                id: 6,
+                title: "Salon & Spa Management",
+                category: "website",
+                description: "Complete salon management system with appointment booking, staff management, and billing.",
+                price: 27999,
+                originalPrice: 37999,
+                rating: 4.4,
+                reviewCount: 76,
+                badges: ["sale"],
+                license: "single",
+                features: [
+                    "Appointment Scheduling",
+                    "Staff Management",
+                    "Service Catalog",
+                    "Customer Database",
+                    "Inventory Management",
+                    "Billing & Invoicing",
+                    "SMS Notifications",
+                    "Analytics Dashboard"
+                ],
+                icon: "fas fa-spa"
+            },
+            {
+                id: 7,
+                title: "School Management System",
+                category: "website",
+                description: "Comprehensive school management software for administration, academics, and communication.",
+                price: 54999,
+                originalPrice: 74999,
+                rating: 4.7,
+                reviewCount: 143,
+                badges: ["new", "premium"],
+                license: "multiple",
+                features: [
+                    "Student Information System",
+                    "Attendance Management",
+                    "Gradebook & Report Cards",
+                    "Timetable Management",
+                    "Fee Management",
+                    "Library Management",
+                    "Parent Portal",
+                    "Mobile App"
+                ],
+                icon: "fas fa-school"
+            },
+            {
+                id: 8,
+                title: "Inventory Management",
+                category: "ecommerce",
+                description: "Advanced inventory management system with barcode scanning and real-time tracking.",
+                price: 32999,
+                originalPrice: 44999,
+                rating: 4.5,
+                reviewCount: 98,
+                badges: ["hot"],
+                license: "single",
+                features: [
+                    "Barcode/QR Code Support",
+                    "Stock Level Management",
+                    "Purchase Order System",
+                    "Supplier Management",
+                    "Sales Analytics",
+                    "Low Stock Alerts",
+                    "Multi-location Support",
+                    "Mobile App"
+                ],
+                icon: "fas fa-boxes"
+            },
+            {
+                id: 9,
+                title: "Healthcare Management",
+                category: "website",
+                description: "Complete healthcare management system for clinics and hospitals.",
+                price: 64999,
+                originalPrice: 89999,
+                rating: 4.8,
+                reviewCount: 187,
+                badges: ["premium"],
+                license: "extended",
+                features: [
+                    "Patient Management",
+                    "Appointment Scheduling",
+                    "Electronic Medical Records",
+                    "Billing & Insurance",
+                    "Pharmacy Management",
+                    "Lab Integration",
+                    "Telemedicine Support",
+                    "HIPAA Compliant"
+                ],
+                icon: "fas fa-heartbeat"
+            }
+        ];
+
+        // Filter and Sort State
+        let currentCategory = 'all';
+        let currentLicense = 'all';
+        let currentSort = 'popularity';
+        let minPrice = 0;
+        let maxPrice = 200000;
+        let currentProduct = null;
+        let productQuantity = 1;
+        let selectedLicense = 'single';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load cart count
+            updateCartCount();
+            
+            // Render products
+            renderProducts(products);
+            
+            // Set price range display
+            updatePriceRangeDisplay();
+            
+            // Initialize pagination
+            setupPagination();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // Render products
+        function renderProducts(productsToRender) {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = '';
+            
+            if (productsToRender.length === 0) {
+                productsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary);">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters to find what you're looking for.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            productsToRender.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.className = `product-card fade-in ${index > 2 ? 'delay-1' : ''}`;
+                productCard.setAttribute('data-category', product.category);
+                productCard.setAttribute('data-license', product.license);
+                productCard.setAttribute('data-price', product.price);
+                
+                // Calculate savings
+                const savings = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+                
+                // Generate stars HTML
+                const stars = generateStars(product.rating);
+                
+                // Generate badges HTML
+                const badgesHTML = product.badges.map(badge => 
+                    `<span class="product-badge badge-${badge}">${badge.toUpperCase()}</span>`
+                ).join('');
+                
+                productCard.innerHTML = `
+                    <div class="product-badges">
+                        ${badgesHTML}
+                    </div>
+                    
+                    <div class="product-image">
+                        <i class="${product.icon}"></i>
+                        <div class="product-actions">
+                            <button class="product-action" onclick="addToCart(${product.id})" title="Add to Cart">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                            <button class="product-action" onclick="viewProduct(${product.id})" title="Quick View">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="product-action" onclick="addToWishlist(${product.id})" title="Add to Wishlist">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-content">
+                        <span class="product-category">${getCategoryName(product.category)}</span>
+                        <h3 class="product-title">${product.title}</h3>
+                        <p class="product-description">${product.description}</p>
+                        
+                        <div class="product-rating">
+                            <div class="stars">${stars}</div>
+                            <span class="rating-count">(${product.reviewCount} reviews)</span>
+                        </div>
+                        
+                        <ul class="product-specs">
+                            ${product.features.slice(0, 3).map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                        
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <div class="current-price">₹${product.price.toLocaleString('en-IN')}</div>
+                                <div class="original-price">₹${product.originalPrice.toLocaleString('en-IN')}</div>
+                            </div>
+                            <div class="product-cta">
+                                <button class="btn btn-secondary" onclick="viewProduct(${product.id})">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                                <button class="btn btn-primary" onclick="addToCart(${product.id})">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                productsGrid.appendChild(productCard);
+            });
+        }
+
+        // Generate stars HTML
+        function generateStars(rating) {
+            let starsHTML = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    starsHTML += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    starsHTML += '<i class="far fa-star"></i>';
+                }
+            }
+            
+            return starsHTML;
+        }
+
+        // Get category name
+        function getCategoryName(category) {
+            const categories = {
+                'website': 'Website Template',
+                'ecommerce': 'E-commerce',
+                'crm': 'CRM System',
+                'restaurant': 'Restaurant',
+                'gym': 'Gym/Fitness'
+            };
+            return categories[category] || category;
+        }
+
+        // Filter by category
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            applyFilters();
+        }
+
+        // Filter by license
+        function filterByLicense(license) {
+            currentLicense = license;
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-option').forEach((option, index) => {
+                if (index >= 5) { // License filter buttons start from index 5
+                    option.classList.remove('active');
+                }
+            });
+            event.target.classList.add('active');
+            
+            applyFilters();
+        }
+
+        // Update price range display
+        function updatePriceRange() {
+            const slider = document.getElementById('priceSlider');
+            const maxPriceInput = document.getElementById('maxPrice');
+            maxPriceInput.value = slider.value;
+            maxPrice = parseInt(slider.value);
+            applyFilters();
+        }
+
+        // Update price range display
+        function updatePriceRangeDisplay() {
+            const minInput = document.getElementById('minPrice');
+            const maxInput = document.getElementById('maxPrice');
+            const slider = document.getElementById('priceSlider');
+            
+            minPrice = parseInt(minInput.value) || 0;
+            maxPrice = parseInt(maxInput.value) || 200000;
+            
+            slider.value = maxPrice;
+        }
+
+        // Filter by price
+        function filterByPrice() {
+            updatePriceRangeDisplay();
+            applyFilters();
+        }
+
+        // Sort products
+        function sortProducts() {
+            currentSort = document.getElementById('sortSelect').value;
+            applyFilters();
+        }
+
+        // Apply all filters
+        function applyFilters() {
+            let filteredProducts = [...products];
+            
+            // Filter by category
+            if (currentCategory !== 'all') {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.category === currentCategory
+                );
+            }
+            
+            // Filter by license
+            if (currentLicense !== 'all') {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.license === currentLicense
+                );
+            }
+            
+            // Filter by price
+            filteredProducts = filteredProducts.filter(product => 
+                product.price >= minPrice && product.price <= maxPrice
+            );
+            
+            // Sort products
+            filteredProducts.sort((a, b) => {
+                switch(currentSort) {
+                    case 'price-low':
+                        return a.price - b.price;
+                    case 'price-high':
+                        return b.price - a.price;
+                    case 'newest':
+                        return b.id - a.id;
+                    case 'rating':
+                        return b.rating - a.rating;
+                    default: // popularity
+                        return b.reviewCount - a.reviewCount;
+                }
+            });
+            
+            renderProducts(filteredProducts);
+        }
+
+        // Reset all filters
+        function resetFilters() {
+            currentCategory = 'all';
+            currentLicense = 'all';
+            minPrice = 0;
+            maxPrice = 200000;
+            
+            // Reset UI
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelectorAll('.filter-option')[0].classList.add('active'); // All category
+            document.querySelectorAll('.filter-option')[5].classList.add('active'); // All license
+            
+            document.getElementById('minPrice').value = 0;
+            document.getElementById('maxPrice').value = 200000;
+            document.getElementById('priceSlider').value = 200000;
+            document.getElementById('sortSelect').value = 'popularity';
+            
+            updatePriceRangeDisplay();
+            applyFilters();
+        }
+
+        // View product details
+        function viewProduct(productId) {
+            currentProduct = products.find(p => p.id === productId);
+            if (!currentProduct) return;
+            
+            // Update modal content
+            document.getElementById('modalCategory').textContent = getCategoryName(currentProduct.category);
+            document.getElementById('modalTitle').textContent = currentProduct.title;
+            document.getElementById('modalCurrentPrice').textContent = `₹${currentProduct.price.toLocaleString('en-IN')}`;
+            document.getElementById('modalOriginalPrice').textContent = `₹${currentProduct.originalPrice.toLocaleString('en-IN')}`;
+            
+            const savings = Math.round(((currentProduct.originalPrice - currentProduct.price) / currentProduct.originalPrice) * 100);
+            document.getElementById('modalSavings').textContent = `Save ${savings}%`;
+            
+            document.getElementById('modalDescription').textContent = currentProduct.description;
+            document.getElementById('reviewCount').textContent = `(${currentProduct.reviewCount} reviews)`;
+            
+            // Update stars
+            const modalStars = document.querySelector('.modal-stars');
+            modalStars.innerHTML = generateStars(currentProduct.rating);
+            
+            // Update features
+            const featuresList = document.getElementById('featuresList');
+            featuresList.innerHTML = '';
+            currentProduct.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                featuresList.appendChild(li);
+            });
+            
+            // Update main image icon
+            const mainImage = document.getElementById('mainImage');
+            mainImage.innerHTML = `<i class="${currentProduct.icon}"></i>`;
+            
+            // Reset quantity
+            productQuantity = 1;
+            document.getElementById('productQuantity').textContent = productQuantity;
+            
+            // Reset license selection
+            document.querySelectorAll('.license-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelectorAll('.license-option')[0].classList.add('active');
+            selectedLicense = 'single';
+            updateLicensePrices();
+            
+            // Show modal
+            document.getElementById('productModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close product modal
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Change main image
+        function changeMainImage(index) {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            thumbnails[index].classList.add('active');
+            
+            // In a real implementation, this would change the main image
+        }
+
+        // Select license
+        function selectLicense(license) {
+            selectedLicense = license;
+            document.querySelectorAll('.license-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.closest('.license-option').classList.add('active');
+            updateLicensePrices();
+        }
+
+        // Update license prices
+        function updateLicensePrices() {
+            if (!currentProduct) return;
+            
+            const licenseOptions = document.querySelectorAll('.license-option');
+            const multipliers = {
+                'single': 1,
+                'multiple': 1.8,
+                'extended': 3.2
+            };
+            
+            licenseOptions.forEach(option => {
+                const licenseType = option.querySelector('.license-name').textContent.includes('Single') ? 'single' :
+                                  option.querySelector('.license-name').textContent.includes('Multiple') ? 'multiple' : 'extended';
+                
+                const price = Math.round(currentProduct.price * multipliers[licenseType]);
+                option.querySelector('.license-price').textContent = `₹${price.toLocaleString('en-IN')}`;
+            });
+        }
+
+        // Change quantity
+        function changeQuantity(change) {
+            productQuantity += change;
+            if (productQuantity < 1) productQuantity = 1;
+            if (productQuantity > 10) productQuantity = 10;
+            document.getElementById('productQuantity').textContent = productQuantity;
+        }
+
+        // Add to cart from modal
+        function addToCartModal() {
+            if (!currentProduct) return;
+            addToCart(currentProduct.id, productQuantity);
+            closeProductModal();
+        }
+
+        // Add to cart
+        function addToCart(productId, quantity = 1) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Get existing cart
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Check if product already exists in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.title,
+                    price: product.price,
+                    icon: product.icon,
+                    category: product.category,
+                    quantity: quantity
+                });
+            }
+            
+            // Save cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show notification
+            showNotification(`${product.title} added to cart!`, 'success');
+        }
+
+        // Add to wishlist
+        function addToWishlist(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Get existing wishlist
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            
+            // Check if product already exists in wishlist
+            const existingItem = wishlist.find(item => item.id === productId);
+            
+            if (!existingItem) {
+                wishlist.push({
+                    id: product.id,
+                    name: product.title,
+                    price: product.price,
+                    icon: product.icon,
+                    category: product.category
+                });
+                
+                // Save wishlist
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                
+                // Show notification
+                showNotification(`${product.title} added to wishlist!`, 'success');
+            } else {
+                showNotification(`${product.title} is already in your wishlist`, 'info');
+            }
+        }
+
+        // Buy now
+        function buyNow() {
+            if (!currentProduct) return;
+            
+            addToCart(currentProduct.id, productQuantity);
+            
+            // Redirect to cart page
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 500);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'error' ? 'var(--accent-red)' : 
+                           type === 'warning' ? 'var(--accent-yellow)' : 
+                           type === 'info' ? 'var(--primary)' : 'var(--accent-green)'};
+                color: ${type === 'warning' ? 'black' : 'white'};
+                padding: 15px 25px;
+                border-radius: var(--border-radius);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 1000;
+                transform: translateX(150%);
+                transition: transform 0.3s ease;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 400px;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 
+                                 type === 'warning' ? 'exclamation-triangle' : 
+                                 type === 'info' ? 'info-circle' : 'check-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(150%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Setup pagination
+        function setupPagination() {
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            const pageBtns = document.querySelectorAll('.page-btn:not(#prevPage):not(#nextPage)');
+            
+            pageBtns.forEach((btn, index) => {
+                btn.addEventListener('click', function() {
+                    pageBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // In a real implementation, this would load the page
+                    showNotification(`Loading page ${this.textContent}...`, 'info');
+                });
+            });
+            
+            prevBtn.addEventListener('click', function() {
+                if (!this.classList.contains('disabled')) {
+                    showNotification('Loading previous page...', 'info');
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (!this.classList.contains('disabled')) {
+                    showNotification('Loading next page...', 'info');
+                }
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Close modal on ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeProductModal();
+                }
+            });
+            
+            // Close modal on outside click
+            document.getElementById('productModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeProductModal();
+                }
+            });
+            
+            // Mobile menu button
+            document.querySelector('.mobile-nav').addEventListener('click', function(e) {
+                if (e.target.closest('.mobile-nav-item')) {
+                    document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    e.target.closest('.mobile-nav-item').classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

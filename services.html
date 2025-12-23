@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Our Services | Code Sniff</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --primary-glow: rgba(0, 242, 255, 0.3);
+            --secondary: #7000ff;
+            --secondary-glow: rgba(112, 0, 255, 0.3);
+            --bg-dark: #0a0a0c;
+            --bg-darker: #050507;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-green: #00ff88;
+            --accent-red: #ff2a6d;
+            --accent-yellow: #ffd166;
+            --accent-orange: #ff7b00;
+            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'Inter', sans-serif;
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-glow: 0 0 20px rgba(0, 242, 255, 0.2);
+            --section-spacing: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- BACKGROUND ELEMENTS --- */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(112, 0, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 242, 255, 0.05) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 20px 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text {
+            font-family: var(--font-sans);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+            font-weight: 300;
+        }
+
+        .desktop-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .desktop-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .desktop-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            color: var(--primary);
+        }
+
+        .desktop-nav a:hover::after,
+        .desktop-nav a.active::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* --- MOBILE NAVIGATION --- */
+        .mobile-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 20px;
+            flex: 1;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-item.active,
+        .mobile-nav-item:hover {
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        /* --- PAGE HERO --- */
+        .page-hero {
+            padding: 180px 5% 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(10, 10, 12, 0.9), transparent);
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 242, 255, 0.1), transparent 70%);
+            z-index: -1;
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .service-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 60px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- SERVICES CATEGORIES --- */
+        .services-categories {
+            padding: var(--section-spacing) 5%;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .category-card.active::before,
+        .category-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-card.active,
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 242, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .category-card.active .category-icon,
+        .category-card:hover .category-icon {
+            transform: scale(1.1);
+            background: rgba(0, 242, 255, 0.2);
+        }
+
+        .category-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .category-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- SERVICES GRID --- */
+        .services-grid-section {
+            padding: var(--section-spacing) 5%;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .service-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-orange));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .service-header {
+            padding: 40px 30px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 242, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin: 25px 0;
+        }
+
+        .service-features li {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .service-pricing {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .price-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .price-period {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .service-cta {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(112, 0, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(112, 0, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 242, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* --- SERVICE DETAILS MODAL --- */
+        .service-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .service-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .service-modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent-red);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .service-details {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .detail-section {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 25px;
+        }
+
+        .detail-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-section h3 i {
+            color: var(--primary);
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tech-tag {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .timeline-info {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .timeline-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .timeline-days {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .timeline-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* --- BOOKING FORM --- */
+        .booking-form {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .booking-form h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.2);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .pricing-summary {
+            background: rgba(0, 242, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .price-row.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- PROCESS SECTION --- */
+        .process-section {
+            padding: var(--section-spacing) 5%;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 1;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- CLIENTS SECTION --- */
+        .clients-section {
+            padding: var(--section-spacing) 5%;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .client-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .client-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-5px);
+        }
+
+        .client-logo {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .client-name {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .client-industry {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .client-testimonial {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-section {
+            padding: var(--section-spacing) 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.1), rgba(0, 242, 255, 0.1));
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 5% 30px;
+            background: var(--bg-darker);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-col p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            
+            .nav-cta {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 101;
+                background: rgba(0, 0, 0, 0.5);
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .page-hero {
+                padding: 150px 5% 80px;
+            }
+            
+            .service-stats {
+                gap: 30px;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .process-steps {
+                gap: 40px;
+            }
+            
+            :root {
+                --section-spacing: 60px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+
+    <!-- BACKGROUND -->
+    <div class="grid-bg"></div>
+
+    <!-- HEADER -->
+    <header>
+        <a href="index.html" class="logo">
+            <div class="logo-icon">{}</div>
+            <div class="logo-text">CODE<span>SNIFF</span></div>
+        </a>
+        
+        <nav class="desktop-nav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html" class="active">Services</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        
+        <a href="#consultation" class="nav-cta">Free Consultation</a>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- MOBILE NAVIGATION -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="about.html" class="mobile-nav-item">
+            <i class="fas fa-info-circle"></i>
+            <span>About</span>
+        </a>
+        <a href="services.html" class="mobile-nav-item active">
+            <i class="fas fa-code"></i>
+            <span>Services</span>
+        </a>
+        <a href="products.html" class="mobile-nav-item">
+            <i class="fas fa-tags"></i>
+            <span>Products</span>
+        </a>
+        <a href="contact.html" class="mobile-nav-item">
+            <i class="fas fa-envelope"></i>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+        <h1 class="page-title fade-in">Our Services</h1>
+        <p class="page-subtitle fade-in">Comprehensive development solutions for businesses of all sizes. From startups to enterprises, we deliver excellence.</p>
+        
+        <div class="service-stats">
+            <div class="stat-item slide-in-left">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Services Offered</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Projects Delivered</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">99%</div>
+                <div class="stat-label">Client Satisfaction</div>
+            </div>
+            <div class="stat-item slide-in-right">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES CATEGORIES -->
+    <section class="services-categories">
+        <h2 class="section-title">Service Categories</h2>
+        
+        <div class="categories-grid">
+            <div class="category-card active" onclick="filterServices('all')">
+                <div class="category-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h3>All Services</h3>
+                <p>Complete range of development solutions</p>
+            </div>
+            
+            <div class="category-card" onclick="filterServices('web')">
+                <div class="category-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>Web Development</h3>
+                <p>Custom websites and web applications</p>
+            </div>
+            
+            <div class="category-card" onclick="filterServices('mobile')">
+                <div class="category-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Mobile Apps</h3>
+                <p>iOS & Android native applications</p>
+            </div>
+            
+            <div class="category-card" onclick="filterServices('cloud')">
+                <div class="category-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Cloud Solutions</h3>
+                <p>Cloud migration and deployment</p>
+            </div>
+            
+            <div class="category-card" onclick="filterServices('devops')">
+                <div class="category-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3>DevOps</h3>
+                <p>CI/CD pipelines and automation</p>
+            </div>
+            
+            <div class="category-card" onclick="filterServices('consulting')">
+                <div class="category-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Consulting</h3>
+                <p>Technical strategy and planning</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES GRID -->
+    <section class="services-grid-section" id="servicesGrid">
+        <h2 class="section-title">Featured Services</h2>
+        
+        <div class="services-grid">
+            <!-- Custom Web Development -->
+            <div class="service-card fade-in" data-category="web">
+                <div class="service-badge">Most Popular</div>
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="service-title">Custom Web Development</h3>
+                    <p class="service-description">Build scalable web applications with modern technologies and best practices.</p>
+                    
+                    <ul class="service-features">
+                        <li>Responsive Design</li>
+                        <li>Modern Frameworks (React, Vue, Angular)</li>
+                        <li>RESTful APIs</li>
+                        <li>Performance Optimization</li>
+                        <li>Cross-browser Compatibility</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹49,999</div>
+                        <div class="price-period">Starting Price</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(1)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(1)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile App Development -->
+            <div class="service-card fade-in delay-1" data-category="mobile">
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="service-title">Mobile App Development</h3>
+                    <p class="service-description">Native iOS and Android applications with seamless user experiences.</p>
+                    
+                    <ul class="service-features">
+                        <li>iOS & Android Development</li>
+                        <li>React Native / Flutter</li>
+                        <li>App Store Deployment</li>
+                        <li>Push Notifications</li>
+                        <li>Offline Capabilities</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹79,999</div>
+                        <div class="price-period">Starting Price</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(2)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(2)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- E-commerce Solutions -->
+            <div class="service-card fade-in delay-2" data-category="web">
+                <div class="service-badge">Hot</div>
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3 class="service-title">E-commerce Solutions</h3>
+                    <p class="service-description">Complete online store setup with payment integration and inventory management.</p>
+                    
+                    <ul class="service-features">
+                        <li>Custom E-commerce Platform</li>
+                        <li>Payment Gateway Integration</li>
+                        <li>Inventory Management</li>
+                        <li>Order Tracking System</li>
+                        <li>Multi-vendor Support</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹64,999</div>
+                        <div class="price-period">Starting Price</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(3)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(3)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cloud Migration -->
+            <div class="service-card fade-in delay-3" data-category="cloud">
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3 class="service-title">Cloud Migration</h3>
+                    <p class="service-description">Seamless migration to AWS, Azure, or Google Cloud with optimization.</p>
+                    
+                    <ul class="service-features">
+                        <li>AWS / Azure / GCP Migration</li>
+                        <li>Cost Optimization</li>
+                        <li>Security Implementation</li>
+                        <li>Disaster Recovery</li>
+                        <li>24/7 Monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹89,999</div>
+                        <div class="price-period">Starting Price</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(4)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(4)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DevOps & CI/CD -->
+            <div class="service-card fade-in" data-category="devops">
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="service-title">DevOps & CI/CD</h3>
+                    <p class="service-description">Automated deployment pipelines and infrastructure as code solutions.</p>
+                    
+                    <ul class="service-features">
+                        <li>CI/CD Pipeline Setup</li>
+                        <li>Docker & Kubernetes</li>
+                        <li>Infrastructure as Code</li>
+                        <li>Monitoring & Logging</li>
+                        <li>Performance Optimization</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹54,999</div>
+                        <div class="price-period">Monthly</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(5)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(5)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technical Consulting -->
+            <div class="service-card fade-in delay-1" data-category="consulting">
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="service-title">Technical Consulting</h3>
+                    <p class="service-description">Expert guidance on technology strategy, architecture, and implementation.</p>
+                    
+                    <ul class="service-features">
+                        <li>Technology Strategy</li>
+                        <li>Architecture Review</li>
+                        <li>Code Audit & Optimization</li>
+                        <li>Team Training</li>
+                        <li>Project Rescue</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹4,999</div>
+                        <div class="price-period">Per Hour</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(6)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(6)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Development -->
+            <div class="service-card fade-in delay-2" data-category="web">
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="service-title">API Development</h3>
+                    <p class="service-description">Robust RESTful and GraphQL APIs with comprehensive documentation.</p>
+                    
+                    <ul class="service-features">
+                        <li>RESTful API Development</li>
+                        <li>GraphQL Implementation</li>
+                        <li>API Documentation</li>
+                        <li>Security & Authentication</li>
+                        <li>Rate Limiting</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹39,999</div>
+                        <div class="price-period">Starting Price</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(7)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(7)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Maintenance & Support -->
+            <div class="service-card fade-in delay-3" data-category="all">
+                <div class="service-badge">24/7 Support</div>
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="service-title">Maintenance & Support</h3>
+                    <p class="service-description">Ongoing support, updates, and maintenance for your applications.</p>
+                    
+                    <ul class="service-features">
+                        <li>24/7 Technical Support</li>
+                        <li>Regular Updates</li>
+                        <li>Bug Fixes</li>
+                        <li>Security Patches</li>
+                        <li>Performance Monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="service-pricing">
+                    <div class="price-info">
+                        <div class="price-amount">₹9,999</div>
+                        <div class="price-period">Monthly</div>
+                    </div>
+                    <div class="service-cta">
+                        <button class="btn btn-secondary" onclick="viewServiceDetails(8)">Details</button>
+                        <button class="btn btn-primary" onclick="bookService(8)">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICE DETAILS MODAL -->
+    <div class="service-modal" id="serviceModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeServiceModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalServiceTitle">Service Title</h2>
+                <p class="modal-subtitle" id="modalServiceSubtitle">Service description will appear here</p>
+            </div>
+            
+            <div class="modal-body">
+                <div class="service-details">
+                    <div class="detail-section">
+                        <h3><i class="fas fa-info-circle"></i> Service Overview</h3>
+                        <p id="serviceOverview">Loading service details...</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3><i class="fas fa-tools"></i> Technologies Used</h3>
+                        <div class="tech-stack" id="techStack">
+                            <!-- Technologies will be added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3><i class="fas fa-tasks"></i> Key Features</h3>
+                        <ul class="service-features" id="keyFeatures">
+                            <!-- Features will be added here -->
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Timeline</h3>
+                        <div class="timeline-info">
+                            <div class="timeline-item">
+                                <div class="timeline-days" id="devTime">4-6</div>
+                                <div class="timeline-label">Weeks Development</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-days" id="testTime">1-2</div>
+                                <div class="timeline-label">Weeks Testing</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-days" id="supportTime">12</div>
+                                <div class="timeline-label">Months Support</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="booking-form">
+                    <h3>Book This Service</h3>
+                    <form id="bookingForm">
+                        <div class="form-group">
+                            <label class="form-label">Service Package</label>
+                            <select class="form-control" id="servicePackage">
+                                <option value="basic">Basic Package</option>
+                                <option value="standard">Standard Package</option>
+                                <option value="premium">Premium Package</option>
+                                <option value="enterprise">Enterprise Package</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="bookingName" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="bookingEmail" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="bookingPhone" placeholder="+91 98765 43210" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="bookingDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Budget (₹)</label>
+                                <select class="form-control" id="bookingBudget">
+                                    <option value="50000">₹50,000 - ₹1,00,000</option>
+                                    <option value="150000">₹1,00,000 - ₹2,00,000</option>
+                                    <option value="300000">₹2,00,000 - ₹4,00,000</option>
+                                    <option value="500000">₹4,00,000+</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Project Requirements</label>
+                            <textarea class="form-control" id="bookingRequirements" rows="3" placeholder="Describe your project requirements"></textarea>
+                        </div>
+                        
+                        <div class="pricing-summary">
+                            <div class="price-row">
+                                <span>Service Cost:</span>
+                                <span id="serviceCost">₹0</span>
+                            </div>
+                            <div class="price-row">
+                                <span>GST (18%):</span>
+                                <span id="gstAmount">₹0</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Total Amount:</span>
+                                <span id="totalAmount">₹0</span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-calendar-check"></i> Schedule Consultation
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS SECTION -->
+    <section class="process-section">
+        <h2 class="section-title">Our Process</h2>
+        
+        <div class="process-steps">
+            <div class="process-step fade-in">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Discovery</h3>
+                <p class="step-description">We understand your business goals, target audience, and project requirements.</p>
+            </div>
+            
+            <div class="process-step fade-in delay-1">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Planning</h3>
+                <p class="step-description">Detailed project planning, architecture design, and technology selection.</p>
+            </div>
+            
+            <div class="process-step fade-in delay-2">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Development</h3>
+                <p class="step-description">Agile development with regular updates and milestone deliveries.</p>
+            </div>
+            
+            <div class="process-step fade-in delay-3">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Testing</h3>
+                <p class="step-description">Rigorous testing for quality assurance, performance, and security.</p>
+            </div>
+            
+            <div class="process-step fade-in">
+                <div class="step-number">5</div>
+                <h3 class="step-title">Deployment</h3>
+                <p class="step-description">Smooth deployment with monitoring and post-launch support.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLIENTS SECTION -->
+    <section class="clients-section">
+        <h2 class="section-title">Trusted by Industry Leaders</h2>
+        
+        <div class="clients-grid">
+            <div class="client-card fade-in">
+                <div class="client-logo">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3 class="client-name">FoodieChain</h3>
+                <div class="client-industry">Restaurant Chain</div>
+                <p class="client-testimonial">"Their e-commerce solution increased our online orders by 300%."</p>
+            </div>
+            
+            <div class="client-card fade-in delay-1">
+                <div class="client-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="client-name">MediCare Plus</h3>
+                <div class="client-industry">Healthcare</div>
+                <p class="client-testimonial">"The patient management system revolutionized our operations."</p>
+            </div>
+            
+            <div class="client-card fade-in delay-2">
+                <div class="client-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="client-name">EduTech Pro</h3>
+                <div class="client-industry">Education Technology</div>
+                <p class="client-testimonial">"Scalable learning platform serving 50,000+ students daily."</p>
+            </div>
+            
+            <div class="client-card fade-in delay-3">
+                <div class="client-logo">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3 class="client-name">QuickLogistics</h3>
+                <div class="client-industry">Logistics</div>
+                <p class="client-testimonial">"Real-time tracking system reduced delivery times by 40%."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section" id="consultation">
+        <h2 class="cta-title fade-in">Ready to Start Your Project?</h2>
+        <p class="cta-description fade-in">Book a free 30-minute consultation with our experts to discuss your requirements and get a customized quote.</p>
+        <div>
+            <button class="btn btn-primary" onclick="showConsultationForm()">
+                <i class="fas fa-calendar"></i> Schedule Free Consultation
+            </button>
+            <button class="btn btn-secondary" onclick="window.open('tel:+919876543210')">
+                <i class="fas fa-phone"></i> Call: +91 98765 43210
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Code Sniff</h3>
+                <p>Full-stack development agency specializing in custom software solutions for businesses worldwide.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-dribbble"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Our Services</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Web Development</a></li>
+                    <li><a href="#">Mobile App Development</a></li>
+                    <li><a href="#">E-commerce Solutions</a></li>
+                    <li><a href="#">Cloud Migration</a></li>
+                    <li><a href="#">DevOps Services</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Info</h3>
+                <p>📍 Delhi | Mumbai | Bangalore</p>
+                <p>📞 +91 98765 43210</p>
+                <p>✉️ services@codesniff.in</p>
+                <p>🕒 Mon-Sat: 9AM - 7PM IST</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 Code Sniff Agency. All rights reserved. | GST: 27ABCDE1234F1Z5</p>
+        </div>
+    </footer>
+
+    <script>
+        // Services Data
+        const services = {
+            1: {
+                title: "Custom Web Development",
+                subtitle: "Build scalable web applications with modern technologies",
+                overview: "We create custom web applications tailored to your business needs using the latest technologies and best practices. Our solutions are scalable, secure, and designed to provide exceptional user experiences.",
+                technologies: ["React", "Vue.js", "Angular", "Node.js", "Python", "Django", "PostgreSQL", "MongoDB"],
+                features: [
+                    "Responsive design for all devices",
+                    "Modern JavaScript frameworks",
+                    "RESTful API development",
+                    "Performance optimization",
+                    "Cross-browser compatibility",
+                    "SEO-friendly architecture",
+                    "Security implementation",
+                    "Analytics integration"
+                ],
+                timeline: {
+                    development: "4-6",
+                    testing: "1-2",
+                    support: "12"
+                },
+                pricing: {
+                    basic: 49999,
+                    standard: 79999,
+                    premium: 129999,
+                    enterprise: 249999
+                }
+            },
+            2: {
+                title: "Mobile App Development",
+                subtitle: "Native iOS and Android applications",
+                overview: "We develop high-performance mobile applications for iOS and Android platforms. Our apps deliver seamless user experiences with native performance and modern design principles.",
+                technologies: ["React Native", "Flutter", "Swift", "Kotlin", "Firebase", "Android Studio", "Xcode"],
+                features: [
+                    "iOS & Android development",
+                    "Cross-platform solutions",
+                    "App Store deployment",
+                    "Push notifications",
+                    "Offline capabilities",
+                    "Social media integration",
+                    "In-app purchases",
+                    "Analytics tracking"
+                ],
+                timeline: {
+                    development: "8-12",
+                    testing: "2-3",
+                    support: "12"
+                },
+                pricing: {
+                    basic: 79999,
+                    standard: 149999,
+                    premium: 249999,
+                    enterprise: 449999
+                }
+            },
+            3: {
+                title: "E-commerce Solutions",
+                subtitle: "Complete online store setup",
+                overview: "Build powerful e-commerce platforms with advanced features for online retail businesses. We create solutions that drive sales and provide excellent shopping experiences.",
+                technologies: ["Shopify", "Magento", "WooCommerce", "React", "Node.js", "Stripe", "Razorpay"],
+                features: [
+                    "Custom e-commerce platform",
+                    "Payment gateway integration",
+                    "Inventory management",
+                    "Order tracking system",
+                    "Multi-vendor support",
+                    "Customer reviews",
+                    "Discount & coupon system",
+                    "Analytics dashboard"
+                ],
+                timeline: {
+                    development: "6-8",
+                    testing: "2-3",
+                    support: "12"
+                },
+                pricing: {
+                    basic: 64999,
+                    standard: 119999,
+                    premium: 199999,
+                    enterprise: 349999
+                }
+            },
+            4: {
+                title: "Cloud Migration",
+                subtitle: "AWS, Azure, Google Cloud migration",
+                overview: "Migrate your infrastructure to cloud platforms with minimal downtime and maximum efficiency. We ensure security, scalability, and cost optimization.",
+                technologies: ["AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Terraform", "Ansible"],
+                features: [
+                    "Cloud platform migration",
+                    "Cost optimization",
+                    "Security implementation",
+                    "Disaster recovery",
+                    "24/7 monitoring",
+                    "Auto-scaling setup",
+                    "Backup solutions",
+                    "Performance tuning"
+                ],
+                timeline: {
+                    development: "2-4",
+                    testing: "1-2",
+                    support: "12"
+                },
+                pricing: {
+                    basic: 89999,
+                    standard: 159999,
+                    premium: 279999,
+                    enterprise: 499999
+                }
+            },
+            5: {
+                title: "DevOps & CI/CD",
+                subtitle: "Automated deployment pipelines",
+                overview: "Implement DevOps practices and CI/CD pipelines to streamline your development and deployment processes for faster delivery and better quality.",
+                technologies: ["Jenkins", "GitLab CI", "GitHub Actions", "Docker", "Kubernetes", "Terraform", "Prometheus"],
+                features: [
+                    "CI/CD pipeline setup",
+                    "Docker containerization",
+                    "Kubernetes orchestration",
+                    "Infrastructure as Code",
+                    "Monitoring & logging",
+                    "Performance optimization",
+                    "Security scanning",
+                    "Automated testing"
+                ],
+                timeline: {
+                    development: "3-5",
+                    testing: "1-2",
+                    support: "6"
+                },
+                pricing: {
+                    basic: 54999,
+                    standard: 99999,
+                    premium: 179999,
+                    enterprise: 299999
+                }
+            },
+            6: {
+                title: "Technical Consulting",
+                subtitle: "Expert technology guidance",
+                overview: "Get expert advice on technology strategy, architecture design, and implementation planning to ensure your projects succeed.",
+                technologies: ["Architecture Review", "Code Audit", "Performance Analysis", "Security Assessment"],
+                features: [
+                    "Technology strategy planning",
+                    "Architecture review",
+                    "Code audit & optimization",
+                    "Team training",
+                    "Project rescue",
+                    "Performance assessment",
+                    "Security assessment",
+                    "Scalability planning"
+                ],
+                timeline: {
+                    development: "N/A",
+                    testing: "N/A",
+                    support: "On-demand"
+                },
+                pricing: {
+                    basic: 4999,
+                    standard: 7999,
+                    premium: 12999,
+                    enterprise: 24999
+                }
+            },
+            7: {
+                title: "API Development",
+                subtitle: "RESTful and GraphQL APIs",
+                overview: "Build robust, scalable APIs with comprehensive documentation and security features to power your applications and integrations.",
+                technologies: ["Node.js", "Python", "GraphQL", "Swagger", "Postman", "JWT", "OAuth"],
+                features: [
+                    "RESTful API development",
+                    "GraphQL implementation",
+                    "API documentation",
+                    "Security & authentication",
+                    "Rate limiting",
+                    "WebSocket support",
+                    "Versioning",
+                    "Testing suite"
+                ],
+                timeline: {
+                    development: "3-5",
+                    testing: "1-2",
+                    support: "12"
+                },
+                pricing: {
+                    basic: 39999,
+                    standard: 74999,
+                    premium: 129999,
+                    enterprise: 229999
+                }
+            },
+            8: {
+                title: "Maintenance & Support",
+                subtitle: "24/7 technical support",
+                overview: "Ongoing support, maintenance, and updates for your applications to ensure they remain secure, performant, and up-to-date.",
+                technologies: ["Monitoring", "Updates", "Security Patches", "Backup"],
+                features: [
+                    "24/7 technical support",
+                    "Regular updates",
+                    "Bug fixes",
+                    "Security patches",
+                    "Performance monitoring",
+                    "Backup management",
+                    "Server maintenance",
+                    "Emergency support"
+                ],
+                timeline: {
+                    development: "Ongoing",
+                    testing: "Ongoing",
+                    support: "Ongoing"
+                },
+                pricing: {
+                    basic: 9999,
+                    standard: 19999,
+                    premium: 34999,
+                    enterprise: 59999
+                }
+            }
+        };
+
+        // Current selected service
+        let currentServiceId = null;
+
+        // Filter services by category
+        function filterServices(category) {
+            // Update active category
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.category-card').classList.add('active');
+            
+            // Filter service cards
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // View service details
+        function viewServiceDetails(serviceId) {
+            currentServiceId = serviceId;
+            const service = services[serviceId];
+            
+            if (!service) return;
+            
+            // Update modal content
+            document.getElementById('modalServiceTitle').textContent = service.title;
+            document.getElementById('modalServiceSubtitle').textContent = service.subtitle;
+            document.getElementById('serviceOverview').textContent = service.overview;
+            
+            // Update technologies
+            const techStack = document.getElementById('techStack');
+            techStack.innerHTML = '';
+            service.technologies.forEach(tech => {
+                const tag = document.createElement('div');
+                tag.className = 'tech-tag';
+                tag.textContent = tech;
+                techStack.appendChild(tag);
+            });
+            
+            // Update features
+            const keyFeatures = document.getElementById('keyFeatures');
+            keyFeatures.innerHTML = '';
+            service.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.textContent = feature;
+                keyFeatures.appendChild(li);
+            });
+            
+            // Update timeline
+            document.getElementById('devTime').textContent = service.timeline.development;
+            document.getElementById('testTime').textContent = service.timeline.testing;
+            document.getElementById('supportTime').textContent = service.timeline.support;
+            
+            // Update pricing in booking form
+            updatePricing(service.pricing.basic);
+            
+            // Set tomorrow's date as default
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('bookingDate').valueAsDate = tomorrow;
+            
+            // Show modal
+            document.getElementById('serviceModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Update pricing based on package
+        function updatePricing(basePrice) {
+            const packageSelect = document.getElementById('servicePackage');
+            const serviceCost = document.getElementById('serviceCost');
+            const gstAmount = document.getElementById('gstAmount');
+            const totalAmount = document.getElementById('totalAmount');
+            
+            let price = 0;
+            
+            switch(packageSelect.value) {
+                case 'basic': price = basePrice; break;
+                case 'standard': price = basePrice * 1.6; break;
+                case 'premium': price = basePrice * 2.6; break;
+                case 'enterprise': price = basePrice * 5; break;
+            }
+            
+            const gst = price * 0.18;
+            const total = price + gst;
+            
+            serviceCost.textContent = `₹${Math.round(price).toLocaleString('en-IN')}`;
+            gstAmount.textContent = `₹${Math.round(gst).toLocaleString('en-IN')}`;
+            totalAmount.textContent = `₹${Math.round(total).toLocaleString('en-IN')}`;
+        }
+
+        // Close service modal
+        function closeServiceModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Book service
+        function bookService(serviceId) {
+            viewServiceDetails(serviceId);
+        }
+
+        // Show consultation form
+        function showConsultationForm() {
+            // Show first service details as consultation
+            viewServiceDetails(1);
+            
+            // Update form for consultation
+            document.getElementById('modalServiceTitle').textContent = "Free Consultation";
+            document.getElementById('modalServiceSubtitle').textContent = "30-minute session with our experts";
+            
+            // Update pricing to show free
+            document.getElementById('serviceCost').textContent = "FREE";
+            document.getElementById('gstAmount').textContent = "FREE";
+            document.getElementById('totalAmount').textContent = "FREE";
+            
+            // Change submit button text
+            const submitBtn = document.querySelector('#bookingForm .btn-primary');
+            submitBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Book Free Consultation';
+        }
+
+        // Handle booking form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const serviceName = document.getElementById('modalServiceTitle').textContent;
+            const name = document.getElementById('bookingName').value;
+            const email = document.getElementById('bookingEmail').value;
+            const phone = document.getElementById('bookingPhone').value;
+            const date = document.getElementById('bookingDate').value;
+            const packageType = document.getElementById('servicePackage').value;
+            
+            // Simulate booking submission
+            alert(`Thank you ${name}!\n\nYour ${serviceName} has been scheduled.\n\nDate: ${date}\nPackage: ${packageType}\n\nWe'll contact you at ${phone} to confirm the details.`);
+            
+            // Close modal and reset form
+            closeServiceModal();
+            this.reset();
+            
+            // Set tomorrow's date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('bookingDate').valueAsDate = tomorrow;
+        });
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Package selection change
+            document.getElementById('servicePackage').addEventListener('change', function() {
+                if (currentServiceId && services[currentServiceId]) {
+                    updatePricing(services[currentServiceId].pricing.basic);
+                }
+            });
+            
+            // Mobile menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                alert('Mobile menu would open here. In production, this would slide in from the right.');
+            });
+            
+            // Mobile nav active state
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    mobileNavItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Close modal on ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeServiceModal();
+                }
+            });
+            
+            // Close modal on outside click
+            document.getElementById('serviceModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeServiceModal();
+                }
+            });
+            
+            // Set tomorrow's date as minimum
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateInput = document.getElementById('bookingDate');
+            dateInput.min = tomorrow.toISOString().split('T')[0];
+            dateInput.valueAsDate = tomorrow;
+            
+            // Phone number formatting
+            const phoneInput = document.getElementById('bookingPhone');
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 0) {
+                    value = '+91 ' + value.substring(0, 10);
+                }
+                e.target.value = value;
+            });
+        });
+    </script>
+</body>
+</html>
